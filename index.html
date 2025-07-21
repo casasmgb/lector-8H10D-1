@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Data Receiver</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #output { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Data Receiver</h1>
+    <div id="output"></div>
+    <script>
+        const ws = new WebSocket('ws://localhost:8765');
+        const output = document.getElementById('output');
+
+        ws.onopen = () => {
+            console.log('Connected to WebSocket server');
+            output.innerHTML += '<p>Connected to server</p>';
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            output.innerHTML += `<p>Received: ${JSON.stringify(data)}</p>`;
+            output.scrollTop = output.scrollHeight;
+        };
+
+        ws.onclose = () => {
+            console.log('Disconnected from WebSocket server');
+            output.innerHTML += '<p>Disconnected from server</p>';
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            output.innerHTML += `<p>Error: ${error}</p>`;
+        };
+    </script>
+</body>
+</html>
